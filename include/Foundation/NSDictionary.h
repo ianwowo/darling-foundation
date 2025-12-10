@@ -101,3 +101,7 @@
 @interface NSDictionary<K, V> (NSGenericFastEnumeraiton) <NSFastEnumeration>
 - (NSUInteger)countByEnumeratingWithState:(NSFastEnumerationState *)state objects:(K __unsafe_unretained [])buffer count:(NSUInteger)len;
 @end
+
+@interface NSConstantDictionary<__covariant KeyType, __covariant ObjectType> : NSDictionary<KeyType, ObjectType>
+
+@end

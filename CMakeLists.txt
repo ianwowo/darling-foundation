@@ -275,6 +275,8 @@ set(foundation_sources
 	src/NSIBPrototypingLayoutConstraint.m
 	src/NSDeprecatedKeyValueCoding.m
 	src/NSCFType.m
+
+	src/NSConstantDoubleNumber.m
 )
 
 # Includes ObjC headers -> must be compiled as ObjC
