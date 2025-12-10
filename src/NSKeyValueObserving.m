@@ -304,7 +304,13 @@ static Class _NSKVOClass(id self, SEL _cmd)
     else
     {
         Method originalClassMethod = class_getInstanceMethod(ret, @selector(class));
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"performPrimitiveOperationUsingObject: objc_msgSend not implemented");
+    return nil;
+#else
         return method_invoke(self, originalClassMethod);
+#endif
     }
 }
 
@@ -483,7 +489,11 @@ id __NSKeyValueRetainedObservationInfoForObject(NSObject *object, NSKeyValueCont
     if (containerClass != nil)
     {
         IMP cachedIMP = containerClass.cachedObservationInfoImplementation;
+#if __arm64__
+        printf("stub SKeyValueRetainedObservationInfoForObject cachedIMP unimplemented!\n");
+#else
         observationInfo = cachedIMP(object, @selector(observationInfo));
+#endif
     }
     else
     {
@@ -734,7 +744,12 @@ static void NSKVODeallocate(id self, SEL _cmd)
     NSArray *observances = [[observationInfo observances] retain];
     struct objc_super super = {self, class_getSuperclass(object_getClass(self))};
     const char *name = object_getClassName(self);
+#if __arm64__
+    #warning objc_msgSendSuper doesn't currently compile on __arm64__
+    NSLog(@"NSKVODeallocate: objc_msgSendSuper not implemented");
+#else
     (void)(void (*)(id, SEL))objc_msgSendSuper(&super, _cmd);
+#endif
     if (observances.count > 0)
     {
         NSKVODeallocateBreak(self, name);
@@ -872,7 +887,12 @@ static os_unfair_lock kvoLegacyDependentKeysLock = OS_UNFAIR_LOCK_INIT;
     [methodName release];
     if ([self respondsToSelector:action])
     {
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"keyPathsForValuesAffectingValueForKey: objc_msgSend not implemented");
+#else
         return (NSSet *)((NSSet * (*)(id, SEL))objc_msgSend(self, action));
+#endif
     }
 
     // i've checked and verified this is what happens:
@@ -910,7 +930,12 @@ static os_unfair_lock kvoLegacyDependentKeysLock = OS_UNFAIR_LOCK_INIT;
     
     if ([self respondsToSelector:notifiesSelector])
     {
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"keyPathsForValuesAffectingValueForKey: objc_msgSend not implemented");
+#else
         return ((BOOL (*)(id, SEL))objc_msgSend)(self, notifiesSelector);
+#endif
     }
     
     return YES;
@@ -1209,7 +1234,13 @@ static void NSKVOForwardInvocation(id self, SEL _cmd, NSInvocation *invocation)
             .super_class = class_getSuperclass(object_getClass(self))
 #endif
         };
+
+#if __arm64__
+    #warning objc_msgSendSuper doesn't currently compile on __arm64__
+    NSLog(@"NSKVOForwardInvocation: objc_msgSendSuper not implemented");
+#else
         (void)(void (*)(id, SEL))objc_msgSendSuper(&super, _cmd);
+#endif
     }
 }
 
@@ -1540,7 +1571,11 @@ static BOOL __NSKeyValueCheckObservationInfoForPendingNotification(NSObject *ori
     NSKeyValueContainerClass *kvcon = observance.property.containerClass;
     if (kvcon != nil)
     {
+#if __arm64__
+        printf("stub __NSKeyValueCheckObservationInfoForPendingNotification cachedObservationInfoImplementation unimplemented!\n");
+#else
         observationInfo = kvcon.cachedObservationInfoImplementation(originalObservable, @selector(observationInfo));
+#endif
     }
     else
     {

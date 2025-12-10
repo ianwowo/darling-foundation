@@ -39,6 +39,10 @@
 
     SEL comp = [self selector];
 
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"performPrimitiveOperationUsingObject: objc_msgSend not implemented");
+#else
     if ((NSComparisonResult)objc_msgSend(upperBound, comp, lowerBound) == NSOrderedAscending)
     {
         id temp = upperBound;
@@ -51,6 +55,7 @@
     {
         return NO;
     }
+#endif // __arm64__
 
     return YES;
 }

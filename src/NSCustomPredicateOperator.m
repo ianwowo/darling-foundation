@@ -35,8 +35,12 @@ static NSString * const NSSelectorNameKey = @"NSSelectorName";
         [NSException raise:NSInvalidArgumentException format:@"Cannot perform operation on nil target"];
         return NO;
     }
-
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"performPrimitiveOperationUsingObject: objc_msgSend not implemented");
+#else
     return (BOOL)objc_msgSend(target, [self selector], arg);
+#endif
 }
 
 - (id)symbol

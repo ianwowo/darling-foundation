@@ -59,8 +59,14 @@ static NSString * const NSOptionsKey = @"NSOptions";
         ![rhs isNSString__])
     {
         SEL sel = [self selector];
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"performPrimitiveOperationUsingObject: objc_msgSend not implemented");
+    return NO;
+#else
         BOOL eq = (BOOL)objc_msgSend(lhs, sel, rhs);
         return _negate ^ eq;
+#endif
     }
 
     CFLocaleRef locale = NULL;

@@ -95,7 +95,13 @@ static NSString * const NSVariantKey = @"NSVariant";
     }
     else
     {
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"performPrimitiveOperationUsingObject: objc_msgSend not implemented");
+    return NO;
+#else
         comp = (NSComparisonResult)objc_msgSend(lhs, [self selector], rhs);
+#endif
     }
 
     switch (_variant)

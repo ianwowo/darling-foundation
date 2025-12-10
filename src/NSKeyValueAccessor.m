@@ -553,11 +553,19 @@ static id _NSGet ## INFIX ##ValueWithMethod(id obj, SEL cmd, Method method) \
     return [NSNumber numberWith##INFIX:((TYPE(*)(id, Method))method_invoke)(obj, method)]; \
 }
 
+#if __arm64__
+#define DEFINE_GET_VALUE_WITH_METHOD(INFIX, TYPE) \
+static id _NSGet ## INFIX ##ValueWithMethod(id obj, SEL cmd, Method method) \
+{ printf("Stub: ValueWithMethod 'method_invoke_stret' is unavailable: not available in arm64\n"); \
+    return [NSValue valueWith##INFIX:((TYPE(*)(id, Method))method_invoke)(obj, method)]; \
+}
+#else
 #define DEFINE_GET_VALUE_WITH_METHOD(INFIX, TYPE) \
 static id _NSGet ## INFIX ##ValueWithMethod(id obj, SEL cmd, Method method) \
 { \
     return [NSValue valueWith##INFIX:((TYPE(*)(id, Method))method_invoke_stret)(obj, method)]; \
 }
+#endif
 
 DEFINE_GET_NUMBER_WITH_METHOD(Char, char)
 DEFINE_GET_NUMBER_WITH_METHOD(UnsignedChar, unsigned char)

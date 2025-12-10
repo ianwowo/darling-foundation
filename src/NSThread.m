@@ -394,7 +394,12 @@ static void *__NSThread__main__(NSThread *thread)
 {
     if (_target && _selector)
     {
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"NSThread:main objc_msgSend not implemented");
+#else
         objc_msgSend(_target, _selector, _argument);
+#endif
     }
 }
 
@@ -471,7 +476,12 @@ static void NSThreadPerform(id self, SEL aSelector, NSThread *thr, id arg, BOOL 
 {
     if ([NSThread currentThread] == thr && waitUntilDone)
     {
+#if __arm64__
+    #warning objc_msgSend doesn't currently compile on __arm64__
+    NSLog(@"NSThreadPerform: objc_msgSend not implemented");
+#else
         objc_msgSend(self, aSelector, arg);
+#endif
         return;
     }
     BOOL signalled = NO;
